@@ -36,7 +36,7 @@ const ThinkingButton: FC<Props> = ({ quickPanel, model, assistantId }): ReactEle
   const { assistant, updateAssistantSettings } = useAssistant(assistantId)
 
   const currentReasoningEffort = useMemo(() => {
-    return assistant.settings?.reasoning_effort || 'none'
+    return assistant.settings?.reasoning_effort
   }, [assistant.settings?.reasoning_effort])
 
   // 确定当前模型支持的选项类型
@@ -46,21 +46,21 @@ const ThinkingButton: FC<Props> = ({ quickPanel, model, assistantId }): ReactEle
   const supportedOptions: ThinkingOption[] = useMemo(() => {
     if (modelType === 'doubao') {
       if (isDoubaoThinkingAutoModel(model)) {
-        return ['none', 'auto', 'high']
+        return ['auto', 'high']
       }
-      return ['none', 'high']
+      return ['high']
     }
     return MODEL_SUPPORTED_OPTIONS[modelType]
   }, [model, modelType])
 
   const onThinkingChange = useCallback(
     (option?: ThinkingOption) => {
-      const isEnabled = option !== undefined && option !== 'none'
+      const isEnabled = option !== undefined
       // 然后更新设置
       if (!isEnabled) {
         updateAssistantSettings({
-          reasoning_effort: option,
-          reasoning_effort_cache: option,
+          reasoning_effort: undefined,
+          reasoning_effort_cache: undefined,
           qwenThinkMode: false
         })
         return
@@ -96,10 +96,10 @@ const ThinkingButton: FC<Props> = ({ quickPanel, model, assistantId }): ReactEle
     }))
   }, [currentReasoningEffort, supportedOptions, onThinkingChange])
 
-  const isThinkingEnabled = currentReasoningEffort !== undefined && currentReasoningEffort !== 'none'
+  const isThinkingEnabled = currentReasoningEffort !== undefined
 
   const disableThinking = useCallback(() => {
-    onThinkingChange('none')
+    onThinkingChange(undefined)
   }, [onThinkingChange])
 
   const openQuickPanel = useCallback(() => {
@@ -116,12 +116,12 @@ const ThinkingButton: FC<Props> = ({ quickPanel, model, assistantId }): ReactEle
       return
     }
 
-    if (isThinkingEnabled && supportedOptions.includes('none')) {
+    if (isThinkingEnabled) {
       disableThinking()
       return
     }
     openQuickPanel()
-  }, [openQuickPanel, quickPanelHook, isThinkingEnabled, supportedOptions, disableThinking])
+  }, [openQuickPanel, quickPanelHook, isThinkingEnabled, disableThinking])
 
   useEffect(() => {
     const disposeMenu = quickPanel.registerRootMenu([
@@ -146,13 +146,13 @@ const ThinkingButton: FC<Props> = ({ quickPanel, model, assistantId }): ReactEle
     <Tooltip
       placement="top"
       title={
-        isThinkingEnabled && supportedOptions.includes('none')
+        isThinkingEnabled
           ? t('common.close')
           : t('assistants.settings.reasoning_effort.label')
       }
       mouseLeaveDelay={0}
       arrow>
-      <ActionIconButton onClick={handleOpenQuickPanel} active={currentReasoningEffort !== 'none'}>
+      <ActionIconButton onClick={handleOpenQuickPanel} active={currentReasoningEffort !== undefined}>
         {ThinkingIcon(currentReasoningEffort)}
       </ActionIconButton>
     </Tooltip>
@@ -177,9 +177,6 @@ const ThinkingIcon = (option?: ThinkingOption) => {
       break
     case 'auto':
       IconComponent = MdiLightbulbAutoOutline
-      break
-    case 'none':
-      IconComponent = MdiLightbulbOffOutline
       break
     default:
       IconComponent = MdiLightbulbOffOutline

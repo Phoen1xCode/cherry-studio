@@ -21,8 +21,10 @@ import {
   ListOrdered,
   Minus,
   Omega,
+  PenTool,
   Quote,
   Redo,
+  Sparkles,
   Strikethrough,
   Table,
   Type,
@@ -145,7 +147,7 @@ const DEFAULT_COMMANDS: Command[] = [
     icon: Sparkles,
     keywords: ['optimize', 'improve', 'enhance', 'polish'],
     handler: (editor: Editor) => {
-      const selectedText = editor.state.selection.content().textContent
+      const selectedText = editor.getText()
       if (selectedText) {
         // 这里需要调用LLM API来优化内容
         window.toast.info('Optimizing content...')
@@ -157,7 +159,7 @@ const DEFAULT_COMMANDS: Command[] = [
       }
     },
     showInToolbar: true,
-    toolbarGroup: 'special'
+    toolbarGroup: 'text'
   },
   {
     id: 'generateContent',
@@ -177,7 +179,7 @@ const DEFAULT_COMMANDS: Command[] = [
       }
     },
     showInToolbar: true,
-    toolbarGroup: 'special'
+    toolbarGroup: 'text'
   },
   {
     id: 'bold',

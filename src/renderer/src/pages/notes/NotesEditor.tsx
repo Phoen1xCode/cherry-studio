@@ -41,9 +41,9 @@ const NotesEditor: FC<NotesEditorProps> = memo(
     }, [settings.defaultEditMode, settings.defaultViewMode])
     const [tmpViewMode, setTmpViewMode] = useState(currentViewMode)
 
-    const handleCommandsReady = useCallback((commandAPI: Pick<RichEditorRef, 'unregisterCommand'>) => {
-      // 不再禁用任何命令，保留用户添加的新命令
-    }, [])
+    const handleCommandsReady = useCallback(() => {
+    // 不再禁用任何命令，保留用户添加的新命令
+  }, [])
 
     if (!activeNodeId) {
       return (

@@ -65,7 +65,7 @@ export function getReasoningEffort(assistant: Assistant, model: Model): Reasonin
 
   // Handle undefined and 'none' reasoningEffort.
   // TODO: They should be separated.
-  if (!reasoningEffort || reasoningEffort === 'none') {
+  if (!reasoningEffort) {
     // openrouter: use reasoning
     if (model.provider === SystemProviderIds.openrouter) {
       // Don't disable reasoning for Gemini models that support thinking tokens
@@ -405,7 +405,7 @@ export function getAnthropicThinkingBudget(
   reasoningEffort: string | undefined,
   modelId: string
 ): number | undefined {
-  if (reasoningEffort === undefined || reasoningEffort === 'none') {
+  if (reasoningEffort === undefined) {
     return undefined
   }
   const effortRatio = EFFORT_RATIO[reasoningEffort]
@@ -441,7 +441,7 @@ export function getAnthropicReasoningParams(
 
   const reasoningEffort = assistant?.settings?.reasoning_effort
 
-  if (reasoningEffort === undefined || reasoningEffort === 'none') {
+  if (reasoningEffort === undefined) {
     return {
       thinking: {
         type: 'disabled'
@@ -498,7 +498,7 @@ export function getGeminiReasoningParams(
 
   // Gemini 推理参数
   if (isSupportedThinkingTokenGeminiModel(model)) {
-    if (reasoningEffort === undefined || reasoningEffort === 'none') {
+    if (reasoningEffort === undefined) {
       return {
         thinkingConfig: {
           includeThoughts: false,
@@ -554,7 +554,7 @@ export function getXAIReasoningParams(assistant: Assistant, model: Model): Pick<
 
   const { reasoning_effort: reasoningEffort } = getAssistantSettings(assistant)
 
-  if (!reasoningEffort || reasoningEffort === 'none') {
+  if (!reasoningEffort) {
     return {}
   }
 
@@ -586,7 +586,7 @@ export function getBedrockReasoningParams(
     return {}
   }
 
-  if (reasoningEffort === 'none') {
+  if (reasoningEffort === undefined) {
     return {
       reasoningConfig: {
         type: 'disabled'

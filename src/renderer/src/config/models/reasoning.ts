@@ -31,8 +31,8 @@ export const MODEL_SUPPORTED_REASONING_EFFORT: ReasoningEffortConfig = {
   openai_deep_research: ['medium'] as const,
   gpt5: ['minimal', 'low', 'medium', 'high'] as const,
   gpt5_codex: ['low', 'medium', 'high'] as const,
-  gpt5_1: ['none', 'low', 'medium', 'high'] as const,
-  gpt5_1_codex: ['none', 'medium', 'high'] as const,
+  gpt5_1: ['low', 'medium', 'high'] as const,
+  gpt5_1_codex: ['medium', 'high'] as const,
   gpt5pro: ['high'] as const,
   grok: ['low', 'high'] as const,
   grok4_fast: ['auto'] as const,
@@ -52,7 +52,7 @@ export const MODEL_SUPPORTED_REASONING_EFFORT: ReasoningEffortConfig = {
 
 // 模型类型到支持选项的映射表
 export const MODEL_SUPPORTED_OPTIONS: ThinkingOptionConfig = {
-  default: ['none', ...MODEL_SUPPORTED_REASONING_EFFORT.default] as const,
+  default: [...MODEL_SUPPORTED_REASONING_EFFORT.default] as const,
   o: MODEL_SUPPORTED_REASONING_EFFORT.o,
   openai_deep_research: MODEL_SUPPORTED_REASONING_EFFORT.openai_deep_research,
   gpt5: [...MODEL_SUPPORTED_REASONING_EFFORT.gpt5] as const,
@@ -61,19 +61,19 @@ export const MODEL_SUPPORTED_OPTIONS: ThinkingOptionConfig = {
   gpt5_1: MODEL_SUPPORTED_REASONING_EFFORT.gpt5_1,
   gpt5_1_codex: MODEL_SUPPORTED_REASONING_EFFORT.gpt5_1_codex,
   grok: MODEL_SUPPORTED_REASONING_EFFORT.grok,
-  grok4_fast: ['none', ...MODEL_SUPPORTED_REASONING_EFFORT.grok4_fast] as const,
-  gemini: ['none', ...MODEL_SUPPORTED_REASONING_EFFORT.gemini] as const,
+  grok4_fast: [...MODEL_SUPPORTED_REASONING_EFFORT.grok4_fast] as const,
+  gemini: [...MODEL_SUPPORTED_REASONING_EFFORT.gemini] as const,
   gemini_pro: MODEL_SUPPORTED_REASONING_EFFORT.gemini_pro,
   gemini3: MODEL_SUPPORTED_REASONING_EFFORT.gemini3,
-  qwen: ['none', ...MODEL_SUPPORTED_REASONING_EFFORT.qwen] as const,
+  qwen: [...MODEL_SUPPORTED_REASONING_EFFORT.qwen] as const,
   qwen_thinking: MODEL_SUPPORTED_REASONING_EFFORT.qwen_thinking,
-  doubao: ['none', ...MODEL_SUPPORTED_REASONING_EFFORT.doubao] as const,
-  doubao_no_auto: ['none', ...MODEL_SUPPORTED_REASONING_EFFORT.doubao_no_auto] as const,
+  doubao: [...MODEL_SUPPORTED_REASONING_EFFORT.doubao] as const,
+  doubao_no_auto: [...MODEL_SUPPORTED_REASONING_EFFORT.doubao_no_auto] as const,
   doubao_after_251015: MODEL_SUPPORTED_REASONING_EFFORT.doubao_after_251015,
-  hunyuan: ['none', ...MODEL_SUPPORTED_REASONING_EFFORT.hunyuan] as const,
-  zhipu: ['none', ...MODEL_SUPPORTED_REASONING_EFFORT.zhipu] as const,
+  hunyuan: [...MODEL_SUPPORTED_REASONING_EFFORT.hunyuan] as const,
+  zhipu: [...MODEL_SUPPORTED_REASONING_EFFORT.zhipu] as const,
   perplexity: MODEL_SUPPORTED_REASONING_EFFORT.perplexity,
-  deepseek_hybrid: ['none', ...MODEL_SUPPORTED_REASONING_EFFORT.deepseek_hybrid] as const
+  deepseek_hybrid: [...MODEL_SUPPORTED_REASONING_EFFORT.deepseek_hybrid] as const
 } as const
 
 const withModelIdAndNameAsId = <T>(model: Model, fn: (model: Model) => T): { idResult: T; nameResult: T } => {
