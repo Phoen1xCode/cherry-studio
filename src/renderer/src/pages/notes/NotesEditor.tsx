@@ -42,10 +42,7 @@ const NotesEditor: FC<NotesEditorProps> = memo(
     const [tmpViewMode, setTmpViewMode] = useState(currentViewMode)
 
     const handleCommandsReady = useCallback((commandAPI: Pick<RichEditorRef, 'unregisterCommand'>) => {
-      const disabledCommands = ['image', 'inlineMath']
-      disabledCommands.forEach((commandId) => {
-        commandAPI.unregisterCommand(commandId)
-      })
+      // 不再禁用任何命令，保留用户添加的新命令
     }, [])
 
     if (!activeNodeId) {

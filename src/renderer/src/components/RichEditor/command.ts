@@ -138,6 +138,48 @@ export function hideToolbarCommandsWhen(commandIds: string[], condition: () => b
 // Default command definitions
 const DEFAULT_COMMANDS: Command[] = [
   {
+    id: 'optimizeContent',
+    title: 'Optimize Content',
+    description: 'Improve the expression of selected text',
+    category: CommandCategory.SPECIAL,
+    icon: Sparkles,
+    keywords: ['optimize', 'improve', 'enhance', 'polish'],
+    handler: (editor: Editor) => {
+      const selectedText = editor.state.selection.content().textContent
+      if (selectedText) {
+        // 这里需要调用LLM API来优化内容
+        window.toast.info('Optimizing content...')
+        // 示例实现：简单的文本转换
+        const optimizedText = selectedText.replace(/\bgood\b/gi, 'excellent')
+        editor.chain().focus().deleteSelection().insertContent(optimizedText).run()
+      } else {
+        window.toast.warning('Please select some text to optimize')
+      }
+    },
+    showInToolbar: true,
+    toolbarGroup: 'special'
+  },
+  {
+    id: 'generateContent',
+    title: 'Generate Content',
+    description: 'Generate content based on current context',
+    category: CommandCategory.SPECIAL,
+    icon: PenTool,
+    keywords: ['generate', 'create', 'write', 'expand'],
+    handler: (editor: Editor) => {
+      const prompt = window.prompt('Enter a prompt for content generation:')
+      if (prompt) {
+        window.toast.info('Generating content...')
+        // 这里需要调用LLM API来生成内容
+        // 示例实现：简单的文本生成
+        const generatedText = `Generated content based on prompt: "${prompt}"`
+        editor.chain().focus().insertContent(generatedText).run()
+      }
+    },
+    showInToolbar: true,
+    toolbarGroup: 'special'
+  },
+  {
     id: 'bold',
     title: 'Bold',
     description: 'Make text bold',

@@ -20,7 +20,7 @@ interface ToolbarItemInternal {
 }
 
 // Group ordering for toolbar layout
-const TOOLBAR_GROUP_ORDER = ['formatting', 'text', 'blocks', 'structure', 'media', 'history']
+const TOOLBAR_GROUP_ORDER = ['formatting', 'text', 'blocks', 'structure', 'media', 'special', 'history']
 
 function getToolbarItems(): ToolbarItemInternal[] {
   const items: ToolbarItemInternal[] = []
