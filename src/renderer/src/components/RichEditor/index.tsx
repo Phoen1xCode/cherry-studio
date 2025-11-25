@@ -507,6 +507,10 @@ const RichEditor = ({
       insertText: (text: string) => {
         editor?.commands.insertContent(text)
       },
+      replaceSelectedText: (text: string) => {
+        editor?.commands.deleteSelection()
+        editor?.commands.insertContent(text)
+      },
       executeCommand: (command: string, value?: any) => {
         if (editor?.commands && command in editor.commands) {
           editor.commands[command](value)

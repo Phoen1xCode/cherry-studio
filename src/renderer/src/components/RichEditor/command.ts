@@ -399,6 +399,40 @@ const DEFAULT_COMMANDS: Command[] = [
     }
   },
   {
+    id: 'optimizeContent',
+    title: '优化表达',
+    description: '对选定的内容进行表达优化',
+    category: CommandCategory.SPECIAL,
+    icon: Omega,
+    keywords: ['优化', '表达', '润色', 'improve', 'refine'],
+    handler: (editor: Editor) => {
+      // 这里将实现表达优化功能
+      const selectedText = editor.state.selection.content().textContent
+      if (selectedText) {
+        // 触发优化表达的逻辑
+        const event = new CustomEvent('optimizeContent', { detail: { text: selectedText } })
+        window.dispatchEvent(event)
+      }
+    },
+    isAvailable: (editor: Editor) => {
+      // 只有当有文本被选定时，才显示这个命令
+      return editor.state.selection.content().textContent.length > 0
+    }
+  },
+  {
+    id: 'generateContent',
+    title: '生成内容',
+    description: '根据现有上下文生成适当的内容',
+    category: CommandCategory.SPECIAL,
+    icon: Calculator,
+    keywords: ['生成', '内容', 'create', 'generate'],
+    handler: (editor: Editor) => {
+      // 这里将实现内容生成功能
+      const event = new CustomEvent('generateContent', { detail: { editor } })
+      window.dispatchEvent(event)
+    }
+  },
+  {
     id: 'inlineMath',
     title: 'Inline Equation',
     description: 'Insert inline equation',

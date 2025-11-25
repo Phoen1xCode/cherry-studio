@@ -124,6 +124,9 @@ export default defineConfig({
         }
       }
     },
+    server: {
+      port: 5187
+    },
     esbuild: isProd ? { legalComments: 'none' } : {}
   }
 })

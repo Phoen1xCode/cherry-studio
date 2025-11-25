@@ -10,10 +10,10 @@ import { useSettings } from '@renderer/hooks/useSettings'
 import { useAppDispatch } from '@renderer/store'
 import { setEnableSpellCheck } from '@renderer/store/settings'
 import type { EditorView } from '@renderer/types'
-import { Empty, Tooltip } from 'antd'
+import { Empty, Modal, Input, Button, message } from 'antd'
 import { SpellCheck } from 'lucide-react'
 import type { FC, RefObject } from 'react'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useMemo, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
@@ -40,6 +40,10 @@ const NotesEditor: FC<NotesEditorProps> = memo(
       }
     }, [settings.defaultEditMode, settings.defaultViewMode])
     const [tmpViewMode, setTmpViewMode] = useState(currentViewMode)
+    const [isGenerateModalVisible, setIsGenerateModalVisible] = useState(false)
+    const [generatePrompt, setGeneratePrompt] = useState('')
+    const [selectedText, setSelectedText] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleCommandsReady = useCallback((commandAPI: Pick<RichEditorRef, 'unregisterCommand'>) => {
       const disabledCommands = ['image', 'inlineMath']
@@ -47,6 +51,67 @@ const NotesEditor: FC<NotesEditorProps> = memo(
         commandAPI.unregisterCommand(commandId)
       })
     }, [])
+
+    // 处理表达优化事件
+    const handleOptimizeContent = useCallback((event: Event) => {
+      const customEvent = event as CustomEvent<{ text: string }>
+      const textToOptimize = customEvent.detail.text
+      setSelectedText(textToOptimize)
+      setIsLoading(true)
+
+      // 这里应该调用AI API来优化文本
+      // 暂时用模拟数据代替
+      setTimeout(() => {
+        const optimizedText = `优化后的内容：${textToOptimize}`
+        // 替换编辑器中的选定文本
+        if (editorRef.current) {
+          editorRef.current.replaceSelectedText(optimizedText)
+        }
+        message.success('内容优化完成')
+        setIsLoading(false)
+      }, 1000)
+    }, [editorRef])
+
+    // 处理内容生成事件
+    const handleGenerateContent = useCallback((event: Event) => {
+      const customEvent = event as CustomEvent<{ editor: any }>
+      setIsGenerateModalVisible(true)
+    }, [])
+
+    // 处理生成内容的确认
+    const handleGenerateConfirm = useCallback(() => {
+      if (!generatePrompt.trim()) {
+        message.warning('请输入要生成的内容描述')
+        return
+      }
+
+      setIsLoading(true)
+      setIsGenerateModalVisible(false)
+
+      // 这里应该调用AI API来生成内容
+      // 暂时用模拟数据代替
+      setTimeout(() => {
+        const generatedText = `根据您的请求生成的内容：${generatePrompt}`
+        // 在光标位置插入生成的内容
+        if (editorRef.current) {
+          editorRef.current.insertText(generatedText)
+        }
+        message.success('内容生成完成')
+        setIsLoading(false)
+        setGeneratePrompt('')
+      }, 1500)
+    }, [editorRef, generatePrompt])
+
+    // 添加事件监听器
+    useEffect(() => {
+      window.addEventListener('optimizeContent', handleOptimizeContent as EventListener)
+      window.addEventListener('generateContent', handleGenerateContent as EventListener)
+
+      return () => {
+        window.removeEventListener('optimizeContent', handleOptimizeContent as EventListener)
+        window.removeEventListener('generateContent', handleGenerateContent as EventListener)
+      }
+    }, [handleOptimizeContent, handleGenerateContent])
 
     if (!activeNodeId) {
       return (
@@ -114,7 +179,8 @@ const NotesEditor: FC<NotesEditorProps> = memo(
                       const newValue = !enableSpellCheck
                       dispatch(setEnableSpellCheck(newValue))
                       window.api.setEnableSpellCheck(newValue)
-                    }}>
+                    }}
+                  >
                     <SpellCheck size={18} />
                   </ActionIconButton>
                 </Tooltip>
@@ -131,6 +197,24 @@ const NotesEditor: FC<NotesEditorProps> = memo(
             </div>
           </HSpaceBetweenStack>
         </BottomPanel>
+
+        {/* 内容生成模态框 */}
+        <Modal
+          title="生成内容"
+          visible={isGenerateModalVisible}
+          onOk={handleGenerateConfirm}
+          onCancel={() => setIsGenerateModalVisible(false)}
+          okText="生成"
+          cancelText="取消"
+          confirmLoading={isLoading}
+        >
+          <Input.TextArea
+            rows={4}
+            placeholder="请输入要生成的内容描述，例如：'续写这篇文章'、'添加一个例子'、'解释这个概念'"
+            value={generatePrompt}
+            onChange={(e) => setGeneratePrompt(e.target.value)}
+          />
+        </Modal>
       </>
     )
   }

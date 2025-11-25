@@ -103,6 +103,8 @@ export interface RichEditorRef {
   clear: () => void
   /** Insert text at current cursor position */
   insertText: (text: string) => void
+  /** Replace selected text with new text */
+  replaceSelectedText: (text: string) => void
   /** Execute a formatting command */
   executeCommand: (command: string, value?: any) => void
   /** Get preview text from current content */
